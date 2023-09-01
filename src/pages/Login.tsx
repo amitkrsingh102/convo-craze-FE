@@ -31,7 +31,7 @@ const Login = () => {
 			});
 			cookieSet("authToken", response.data.authToken);
 			localStorage.setItem("user", JSON.stringify(response.data.user));
-			navigate("/home");
+			navigate("/");
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				// console.error(err.response?.data.message as string);

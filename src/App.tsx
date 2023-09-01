@@ -8,15 +8,16 @@ import { useAuthContext } from "./hooks/useAuthContext";
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 import SelectAvatar from "./pages/Avatar";
 import NotFound from "./pages/404";
+import { BACKEND_URL } from "./utils/config";
 
-const ENDPOINT = "http://localhost:5001";
+// const ENDPOINT = "http://localhost:5001";
 // eslint-disable-next-line react-refresh/only-export-components
 export let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
 function App() {
 	const { authState, authDispatch } = useAuthContext();
 	useEffect(() => {
-		socket = io(ENDPOINT);
+		socket = io(BACKEND_URL);
 		socket.emit("setup", authState.user);
 
 		socket.on("connect", () => console.log("connected..."));

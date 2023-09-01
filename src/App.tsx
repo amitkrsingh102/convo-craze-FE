@@ -40,7 +40,7 @@ function App() {
 				<Route path="/login" element={<Login />} />
 				<Route path="/avatar" element={<SelectAvatar />} />
 				<Route path="/register" element={<Register />} />
-				<Route path="/home" element={<Home />} />
+				<Route path="/" element={<Home />} />
 				<Route path="/*" element={<NotFound />} />
 			</Routes>
 		</main>

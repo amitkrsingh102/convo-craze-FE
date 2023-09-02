@@ -7,6 +7,7 @@ import { socket } from "../App";
 import { useCookies } from "react-cookie";
 import Picker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { BACKEND_URL } from "../utils/config";
+import { Oval } from "react-loader-spinner";
 
 const MessageInput = () => {
 	const [cookies] = useCookies(["authToken"]);
@@ -14,6 +15,7 @@ const MessageInput = () => {
 	const [openEmojiBar, openEmojiBarSet] = useState(false);
 	const { authState } = useAuthContext();
 	const { globalState } = useUserGlobalStateContext();
+	const [loading, loadingSet] = useState(false);
 
 	const onEmojiPick = (emojiObject: EmojiClickData) => {
 		messageTextSet((prev) => prev + emojiObject.emoji);
@@ -22,7 +24,7 @@ const MessageInput = () => {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-
+		loadingSet(true);
 		await axios.post(
 			`${BACKEND_URL}/user/send`,
 			{
@@ -36,6 +38,7 @@ const MessageInput = () => {
 				},
 			}
 		);
+		loadingSet(false);
 		messageTextSet("");
 		// socket.emit("setup", authState.user);
 	};
@@ -83,7 +86,19 @@ const MessageInput = () => {
 				type="submit"
 				className="w-20 py-2.5 bg-blue-800 text-white hover:border hover:border-slate-500 hover:bg-blue-700 rounded-lg"
 			>
-				Send
+				{loading ? (
+					<div className="flex items-center justify-center">
+						<Oval
+							width="25"
+							height="25"
+							strokeWidth="7"
+							color="rgb(54,98,227)"
+							secondaryColor="rbg(18,24,38)"
+						/>
+					</div>
+				) : (
+					<span>Send</span>
+				)}
 			</button>
 		</form>
 	);

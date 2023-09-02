@@ -37,11 +37,11 @@ function App() {
 	return (
 		<main className="bg-slate-900 h-screen w-screen overflow-clip fixed">
 			<Routes>
+				<Route path="*" element={<NotFound />} />
+				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/avatar" element={<SelectAvatar />} />
 				<Route path="/register" element={<Register />} />
-				<Route path="/" element={<Home />} />
-				<Route path="/*" element={<NotFound />} />
 			</Routes>
 		</main>
 	);

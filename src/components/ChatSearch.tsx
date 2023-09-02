@@ -7,6 +7,7 @@ import { useCookies } from "react-cookie";
 import ProfileImage from "./ProfileImage";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { BACKEND_URL } from "../utils/config";
+import { Oval } from "react-loader-spinner";
 
 type FoundUserCardProps = {
 	user: UserType;
@@ -20,6 +21,7 @@ const ChatSearch = () => {
 	const [inputValue, inputValueSet] = useState("");
 	const [foundUser, foundUserSet] = useState<UserType>();
 	const [errorMessage, errorMessageSet] = useState("");
+	const [loading, loadingSet] = useState(false);
 
 	const closeCard = () => {
 		foundUserSet(undefined);
@@ -36,6 +38,7 @@ const ChatSearch = () => {
 			return;
 		}
 		try {
+			loadingSet(true);
 			const response = await axios.get(
 				`${BACKEND_URL}/user/find/${inputValue}`,
 				{
@@ -45,8 +48,10 @@ const ChatSearch = () => {
 				}
 			);
 			foundUserSet(response.data);
+			loadingSet(false);
 			console.log(response.data);
 		} catch (err) {
+			loadingSet(false);
 			if (err instanceof AxiosError) {
 				errorMessageSet(err.response?.data.message as string);
 				setTimeout(() => {
@@ -71,6 +76,17 @@ const ChatSearch = () => {
 					className="px-2 py-1.5 border-b-2 border-gray-600 bg-inherit outline-none hover:bg-slate-600 focus-within:bg-slate-600 w-full rounded transition-colors duration-200 mb-2"
 				/>
 			</form>
+			{loading && (
+				<div className="flex items-center justify-center">
+					<Oval
+						width="25"
+						height="25"
+						strokeWidth="7"
+						color="rgb(54,98,227)"
+						secondaryColor="rbg(18,24,38)"
+					/>
+				</div>
+			)}
 			{foundUser && (
 				<FoundUserCard
 					user={foundUser}

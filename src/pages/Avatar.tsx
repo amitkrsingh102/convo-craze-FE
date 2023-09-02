@@ -63,7 +63,7 @@ const SelectAvatar = () => {
 				}
 			);
 			loadingSet(false);
-			navigate("/home");
+			navigate("/");
 			window.location.reload();
 		} catch (err) {
 			loadingSet(false);

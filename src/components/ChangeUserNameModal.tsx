@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useCookies } from "react-cookie";
 import { BACKEND_URL } from "../utils/config";
+import { RotatingLines } from "react-loader-spinner";
 
 type ChangeUserModalProps = {
 	openSet: (args: boolean) => void;
@@ -12,6 +13,7 @@ const ChangeUserNameModal = ({ openSet }: ChangeUserModalProps) => {
 	const { authState } = useAuthContext();
 	const [errorMessage, errorMessageSet] = useState("");
 	const [cookies] = useCookies(["authToken"]);
+	const [loading, loadingSet] = useState(false);
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -24,6 +26,7 @@ const ChangeUserNameModal = ({ openSet }: ChangeUserModalProps) => {
 		}
 
 		try {
+			loadingSet(true);
 			await axios.put(
 				`${BACKEND_URL}/user/update/username`,
 				{
@@ -36,9 +39,11 @@ const ChangeUserNameModal = ({ openSet }: ChangeUserModalProps) => {
 					},
 				}
 			);
+			loadingSet(false);
 			window.location.reload();
 			openSet(false);
 		} catch (err) {
+			loadingSet(false);
 			if (err instanceof AxiosError) {
 				errorMessageSet(err.response?.data.message as string);
 			} else {
@@ -49,54 +54,66 @@ const ChangeUserNameModal = ({ openSet }: ChangeUserModalProps) => {
 
 	return (
 		<div className="w-screen h-screen bg-[rgba(0,0,0,0.8)] absolute z-20 items-center flex flex-col justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-			<div className="w-1/4 rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
-				<div className="p-6 space-y-4 sm:p-8">
-					<div className="flex justify-between">
-						<h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
-							Change Username
-						</h1>
-						<button
-							className="ml-auto px-2 py-2 rounded-full hover:bg-red-700 transition-colors duration-200 outline-none focus-within:bg-red-700"
-							onClick={() => {
-								openSet(false);
-							}}
-						>
-							<IoMdClose />
-						</button>
-					</div>
-					<form
-						className="space-y-4 md:space-y-6"
-						onSubmit={(e) => handleSubmit(e)}
-					>
-						<div>
-							<span className="block mb-2 text-sm font-medium text-white">
-								New username :
-							</span>
-							<input
-								type="text"
-								name="text"
-								className=" border border-gray-600 text-gray-50 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 bg-gray-700 outline-none "
-								placeholder="username"
-								autoComplete="username"
-								required
-							/>
-						</div>
-						{errorMessage && (
-							<div
-								className={`px-3 py-1 rounded-md bg-red-950 text-[calc(12px)] text-red-500 flex justify-center`}
-							>
-								<span>{errorMessage}</span>
-							</div>
-						)}
-						<button
-							type="submit"
-							className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center "
-						>
-							Change
-						</button>
-					</form>
+			{loading ? (
+				<div className="h-screen flex items-center justify-center">
+					<RotatingLines
+						width="100"
+						strokeColor="rgba(54,98,227,1)"
+						strokeWidth="3"
+						animationDuration="1"
+						ariaLabel="loading"
+					/>
 				</div>
-			</div>
+			) : (
+				<div className="w-1/4 rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
+					<div className="p-6 space-y-4 sm:p-8">
+						<div className="flex justify-between">
+							<h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
+								Change Username
+							</h1>
+							<button
+								className="ml-auto px-2 py-2 rounded-full hover:bg-red-700 transition-colors duration-200 outline-none focus-within:bg-red-700"
+								onClick={() => {
+									openSet(false);
+								}}
+							>
+								<IoMdClose />
+							</button>
+						</div>
+						<form
+							className="space-y-4 md:space-y-6"
+							onSubmit={(e) => handleSubmit(e)}
+						>
+							<div>
+								<span className="block mb-2 text-sm font-medium text-white">
+									New username :
+								</span>
+								<input
+									type="text"
+									name="text"
+									className=" border border-gray-600 text-gray-50 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 bg-gray-700 outline-none "
+									placeholder="username"
+									autoComplete="username"
+									required
+								/>
+							</div>
+							{errorMessage && (
+								<div
+									className={`px-3 py-1 rounded-md bg-red-950 text-[calc(12px)] text-red-500 flex justify-center`}
+								>
+									<span>{errorMessage}</span>
+								</div>
+							)}
+							<button
+								type="submit"
+								className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+							>
+								Change
+							</button>
+						</form>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

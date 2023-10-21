@@ -90,7 +90,7 @@ const Login = () => {
 										type="email"
 										name="email"
 										className=" border border-gray-600 text-gray-50 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 bg-gray-700 outline-none "
-										placeholder="name@company.com"
+										placeholder="for testing : adam@convocraze.com"
 										autoComplete="email"
 										required
 									/>
@@ -104,7 +104,7 @@ const Login = () => {
 										type="password"
 										name="password"
 										id="password"
-										placeholder="••••••••"
+										placeholder="test password : admin1234"
 										className=" border border-gray-600 text-gray-50 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 bg-gray-700 outline-none"
 										required
 										autoComplete="password"
